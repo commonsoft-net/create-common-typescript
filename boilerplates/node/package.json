@@ -1,0 +1,35 @@
+{
+  "name": "a-package-name",
+  "version": "0.0.1",
+  "private": false,
+  "description": "",
+  "main": "./lib/index.js",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "node $npm_package_main",
+    "build": "yarn clear && yarn lint && tsc",
+    "build:watch": "yarn clear && tsc -w",
+    "clear": "rimraf coverage lib",
+    "lint": "eslint ./src/* --ext .ts --fix",
+    "test": "jest --coverage",
+    "test:watch": "jest --watch"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/jest": "^25.2.1",
+    "@types/node": "~12.12.27",
+    "@types/react": "^16.9.35",
+    "@typescript-eslint/eslint-plugin": "^3.1.0",
+    "@typescript-eslint/parser": "^3.1.0",
+    "eslint": "~6.8.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-config-react": "^1.1.7",
+    "eslint-plugin-jest": "~23.7.0",
+    "eslint-plugin-prettier": "^3.1.3",
+    "jest": "^25.4.0",
+    "prettier": "^2.0.5",
+    "rimraf": "~3.0.2",
+    "ts-jest": "~25.2.0",
+    "typescript": "~3.8.2"
+  }
+}
