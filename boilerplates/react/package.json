@@ -10,7 +10,7 @@
     "build": "yarn clear && yarn lint && tsc",
     "build:watch": "yarn clear && tsc -w",
     "clear": "rimraf coverage lib",
-    "lint": "eslint ./src/* --ext .ts,.tsx --fix",
+    "lint": "eslint src --ext .ts,.tsx --fix",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
     "storybook": "start-storybook -p 9009 -s public",
