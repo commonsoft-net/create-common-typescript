@@ -14,7 +14,7 @@
     "build": "yarn clear && yarn lint && tsc",
     "build:watch": "yarn clear && tsc -w",
     "clear": "rimraf coverage lib",
-    "lint": "eslint ./src/* --ext .ts --fix",
+    "lint": "eslint src --ext .ts --fix",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
     "prepublish": "yarn build"

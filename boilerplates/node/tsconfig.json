@@ -22,7 +22,7 @@
     "strictNullChecks": false
   },
   "include": [
-    "src/**/*.ts"
+    "src"
   ],
   "exclude": [
     "src/**/*spec*.ts",
