@@ -8,14 +8,14 @@ export default class Yarn {
     return spawnProcess('yarn', ['install'], { cwd: workDir });
   }
 
-  add(packages: string[], options: string[]) {
+  add(packages: string[], options: string[] = []) {
     const { workDir } = this;
     return spawnProcess('yarn', ['add', ...options, ...packages], {
       cwd: workDir,
     });
   }
 
-  create(packageName: string, options: string[]) {
+  create(packageName: string, options: string[] = []) {
     const { workDir } = this;
     return spawnProcess('yarn', ['create', packageName, ...options], {
       cwd: workDir,
