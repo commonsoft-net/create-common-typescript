@@ -28,16 +28,26 @@ const checkProjectFolder = (projectName: string) => {
     );
   }
 };
+
+async function runReactApp(projectName: string) {
+  const yarn = new Yarn();
+  await yarn.create('react-app', [projectName, '--template', 'typescript']);
+}
+
 export type RunOptions = {
   attachBin: boolean;
   skipInstall: boolean;
-  type: 'node' | 'react';
+  type: 'node' | 'react' | 'react-app';
 };
 
 export async function run(
   projectName: string,
   { attachBin, skipInstall, type }: RunOptions
 ) {
+  if (type === 'react-app') {
+    return runReactApp(projectName);
+  }
+
   checkProjectFolder(projectName);
 
   copyFiles(projectName, type);
