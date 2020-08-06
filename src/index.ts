@@ -30,8 +30,24 @@ const checkProjectFolder = (projectName: string) => {
 };
 
 async function runReactApp(projectName: string) {
-  const yarn = new Yarn();
-  await yarn.create('react-app', [projectName, '--template', 'typescript']);
+  await new Yarn().create('react-app', [
+    projectName,
+    '--template',
+    'typescript',
+  ]);
+  const yarn = new Yarn(projectName);
+  await yarn.add(
+    [
+      '@types/react',
+      '@typescript-eslint/eslint-plugin',
+      '@typescript-eslint/parser',
+      'eslint-config-prettier',
+      'eslint-config-react',
+      'eslint-plugin-prettier',
+      'prettier',
+    ],
+    ['-D']
+  );
 }
 
 export type RunOptions = {
