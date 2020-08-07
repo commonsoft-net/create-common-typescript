@@ -48,24 +48,20 @@ async function runReactApp(projectName: string) {
     ],
     ['-D']
   );
+  console.log('Installing Storybook');
+  await new Storybook(projectName).install('react-app');
 }
 
-export type RunOptions = {
+export type RunPackageOptions = {
   attachBin: boolean;
   skipInstall: boolean;
-  type: 'node' | 'react' | 'react-app';
+  type: 'node' | 'react';
 };
 
-export async function run(
+export async function runPackage(
   projectName: string,
-  { attachBin, skipInstall, type }: RunOptions
+  { attachBin, skipInstall, type }: RunPackageOptions
 ) {
-  if (type === 'react-app') {
-    return runReactApp(projectName);
-  }
-
-  checkProjectFolder(projectName);
-
   copyFiles(projectName, type);
   packageJson.addPackageName(projectName);
 
@@ -74,17 +70,29 @@ export async function run(
     packageJson.addBinCommand(projectName);
   }
 
+  if (type === 'react') {
+    console.log('Installing Storybook');
+    await new Storybook(projectName).install(type);
+  }
+
   if (!skipInstall) {
     const yarn = new Yarn(projectName);
     await yarn.install();
   }
-
-  if (type === 'react') {
-    console.log('Installing Storybook');
-    const storybook = new Storybook(projectName);
-    await storybook.install();
-  }
-
   // Adds prebublish after all the yarn installs
   packageJson.addPrepublishScript(projectName);
+}
+
+export type RunOptions = Omit<RunPackageOptions, 'type'> & {
+  type: 'node' | 'react' | 'react-app';
+};
+
+export async function run(projectName: string, options: RunOptions) {
+  checkProjectFolder(projectName);
+
+  if (options.type === 'react-app') {
+    return runReactApp(projectName);
+  } else {
+    return runPackage(projectName, options);
+  }
 }

@@ -16,22 +16,21 @@ const addons = {
 export default class Storybook {
   constructor(private workDir: string) {}
 
-  async install() {
-    await this.baseInstall();
+  async install(type: 'react' | 'react-app') {
+    await this.baseInstall(type);
     this.updateDefaultExamples();
     await this.installTypescriptParsers();
     this.updateSettings();
   }
 
-  private baseInstall() {
+  private baseInstall(type: 'react' | 'react-app') {
     const { workDir } = this;
-    return spawnProcess(
-      'npx',
-      ['-p', '@storybook/cli', 'sb', 'init', '--type', 'react'],
-      {
-        cwd: workDir,
-      }
-    );
+    const options = ['-p', '@storybook/cli', 'sb', 'init'];
+    if (type === 'react') {
+      options.push('--type');
+      options.push('react');
+    }
+    return spawnProcess('npx', options, { cwd: workDir });
   }
 
   private updateSettings() {
