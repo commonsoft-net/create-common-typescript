@@ -1,71 +1,60 @@
-import fs from 'fs';
+import fs from 'fs-extra';
 import path from 'path';
 import { spawnProcess } from './util/spawn';
 import Yarn from './yarn';
 
-const stories = {
-  before: '../stories/**/*.stories.js',
-  after: '../src/**/*.stories.tsx',
-};
-
-const addons = {
-  before: `addons: ['@storybook/addon-actions', '@storybook/addon-links']`,
-  after: `addons: ['@storybook/addon-actions', '@storybook/addon-links', '@storybook/preset-typescript']`,
-};
-
 export default class Storybook {
   constructor(private workDir: string) {}
 
-  async install() {
-    await this.baseInstall();
+  async install(type: 'react' | 'react-app') {
+    console.log('Installing Storybook');
+    await this.baseInstall(type);
     this.updateDefaultExamples();
     await this.installTypescriptParsers();
-    this.updateSettings();
+    this.updateSettings(type);
   }
 
-  private baseInstall() {
+  private baseInstall(type: 'react' | 'react-app') {
     const { workDir } = this;
-    return spawnProcess(
-      'npx',
-      ['-p', '@storybook/cli', 'sb', 'init', '--type', 'react'],
-      {
-        cwd: workDir,
-      }
+    const options = ['-p', '@storybook/cli', 'sb', 'init'];
+    if (type === 'react') {
+      options.push('--type');
+      options.push('react');
+    }
+    return spawnProcess('npx', options, { cwd: workDir });
+  }
+
+  private updateSettings(type: 'react' | 'react-app') {
+    const dest = path.join(this.workDir, '.storybook/main.js');
+    fs.renameSync(dest, dest.replace(/\.js$/, '.js.bak'));
+    fs.copySync(
+      path.join(__dirname, '..', 'boilerplates', type, 'storybook/main.js'),
+      dest
     );
-  }
-
-  private updateSettings() {
-    const { workDir } = this;
-    const filename = path.join(workDir, '.storybook/main.js');
-    const text = fs.readFileSync(filename, { encoding: 'utf-8' });
-
-    const newText = text
-      .replace(stories.before, stories.after)
-      .replace(addons.before, addons.after);
-
-    fs.writeFileSync(filename, newText, 'utf-8');
   }
 
   private updateDefaultExamples() {
     const { workDir } = this;
     const foldername = path.join(workDir, 'stories');
     const newFoldername = path.join(workDir, 'src/stories');
-    fs.renameSync(foldername, newFoldername);
-
-    const files = fs.readdirSync(newFoldername);
-    files.forEach((fileName) => {
-      const oldFilePath = path.join(newFoldername, fileName);
-      const newFilePath = path.join(
-        newFoldername,
-        fileName.replace(/.js$/, '.tsx')
-      );
-      fs.renameSync(oldFilePath, newFilePath);
-    });
+    if (fs.existsSync(foldername)) {
+      fs.renameSync(foldername, newFoldername);
+    }
+    if (fs.existsSync(newFoldername)) {
+      const files = fs.readdirSync(newFoldername);
+      files.forEach((fileName) => {
+        const oldFilePath = path.join(newFoldername, fileName);
+        const newFilePath = path.join(
+          newFoldername,
+          fileName.replace(/.js$/, '.tsx')
+        );
+        fs.renameSync(oldFilePath, newFilePath);
+      });
+    }
   }
 
   private installTypescriptParsers() {
-    const yarn = new Yarn(this.workDir);
-    return yarn.add(
+    return new Yarn(this.workDir).add(
       [
         '@storybook/preset-typescript',
         'ts-loader',

@@ -7,7 +7,7 @@ import * as packageJson from './packageJson';
 
 function copyFiles(projectName: string, boilerplate: 'node' | 'react') {
   fsExtra.copySync(
-    path.join(__dirname, '..', 'boilerplates', boilerplate),
+    path.join(__dirname, '..', 'boilerplates', boilerplate, 'base'),
     projectName
   );
 }
@@ -48,6 +48,7 @@ async function runReactApp(projectName: string) {
     ],
     ['-D']
   );
+  await new Storybook(projectName).install('react-app');
 }
 
 export type RunOptions = {
@@ -60,12 +61,11 @@ export async function run(
   projectName: string,
   { attachBin, skipInstall, type }: RunOptions
 ) {
+  checkProjectFolder(projectName);
+
   if (type === 'react-app') {
     return runReactApp(projectName);
   }
-
-  checkProjectFolder(projectName);
-
   copyFiles(projectName, type);
   packageJson.addPackageName(projectName);
 
@@ -73,18 +73,13 @@ export async function run(
     makeExecutable(path.join(projectName, 'src/index.ts'));
     packageJson.addBinCommand(projectName);
   }
-
   if (!skipInstall) {
-    const yarn = new Yarn(projectName);
-    await yarn.install();
+    if (type === 'react') {
+      await new Storybook(projectName).install(type);
+    } else {
+      await new Yarn(projectName).install();
+    }
   }
-
-  if (type === 'react') {
-    console.log('Installing Storybook');
-    const storybook = new Storybook(projectName);
-    await storybook.install();
-  }
-
   // Adds prebublish after all the yarn installs
   packageJson.addPrepublishScript(projectName);
 }
