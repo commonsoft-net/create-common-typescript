@@ -7,7 +7,7 @@ import * as packageJson from './packageJson';
 
 function copyFiles(projectName: string, boilerplate: 'node' | 'react') {
   fsExtra.copySync(
-    path.join(__dirname, '..', 'boilerplates', boilerplate, 'base'),
+    path.join(__dirname, '..', 'boilerplates', boilerplate),
     projectName
   );
 }
