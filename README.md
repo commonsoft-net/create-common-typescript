@@ -25,7 +25,7 @@ yarn create common-typescript $project-name -t $project-type
 _$project-name_ supports namespaced names like `@org/project`
 
 ### Options
--t, --type: Project type: "node" or "react"
+-t, --type: Project type: "node", "react" or "react-app"
 
 -b, --attach-bin: Adds bin script linked to index file
 
