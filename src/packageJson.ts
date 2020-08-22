@@ -60,8 +60,16 @@ export function addBinCommand(projectName: string) {
   writePackageJson(projectName, sortJSON(packageJson));
 }
 
-export function addPrepublishScript(projectName: string) {
+function addScript(projectName: string, name: string, command: string) {
   const packageJson = read(projectName);
-  packageJson.scripts.prepublish = 'yarn build';
+  packageJson.scripts[name] = command;
   writePackageJson(projectName, sortJSON(packageJson));
+}
+
+export function addPrepublishScript(projectName: string) {
+  addScript(projectName, 'prepublish', 'yarn build');
+}
+
+export function addLintScript(projectName: string) {
+  addScript(projectName, 'lint:fix', 'eslint . --ext .ts,.tsx --fix');
 }

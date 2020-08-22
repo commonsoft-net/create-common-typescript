@@ -5,7 +5,10 @@ import Yarn from './yarn';
 import Storybook from './storybook';
 import * as packageJson from './packageJson';
 
-function copyFiles(projectName: string, boilerplate: 'node' | 'react') {
+function copyFiles(
+  projectName: string,
+  boilerplate: 'node' | 'react' | 'react-app'
+) {
   fsExtra.copySync(
     path.join(__dirname, '..', 'boilerplates', boilerplate),
     projectName
@@ -30,13 +33,13 @@ const checkProjectFolder = (projectName: string) => {
 };
 
 async function runReactApp(projectName: string) {
-  await new Yarn().create('react-app', [
+  const projectType = 'react-app';
+  await new Yarn().create(projectType, [
     projectName,
     '--template',
     'typescript',
   ]);
-  const yarn = new Yarn(projectName);
-  await yarn.add(
+  await new Yarn(projectName).add(
     [
       '@types/react',
       '@typescript-eslint/eslint-plugin',
@@ -48,7 +51,9 @@ async function runReactApp(projectName: string) {
     ],
     ['-D']
   );
-  await new Storybook(projectName).install('react-app');
+  copyFiles(projectName, projectType);
+  packageJson.addLintScript(projectName);
+  await new Storybook(projectName).install(projectType);
 }
 
 export type RunOptions = {
