@@ -1,6 +1,6 @@
 {
   "name": "create-common-typescript",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": false,
   "description": "",
   "main": "./lib/index.js",
@@ -20,6 +20,7 @@
     "publish-pkg": "yarn build && yarn publish"
   },
   "dependencies": {
+    "@commonsoft/movedeps": "^0.2.0",
     "commander": "^5.1.0",
     "fs-extra": "^9.0.1"
   },

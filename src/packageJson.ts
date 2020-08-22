@@ -1,5 +1,6 @@
 import fsExtra from 'fs-extra';
 import path from 'path';
+import { PackageJsonEditor } from '@commonsoft/movedeps';
 
 export const read = (folderName: string) =>
   JSON.parse(
@@ -72,4 +73,20 @@ export function addPrepublishScript(projectName: string) {
 
 export function addLintScript(projectName: string) {
   addScript(projectName, 'lint:fix', 'eslint . --ext .ts,.tsx --fix');
+}
+
+export function moveDependencies(projectName: string) {
+  const editor = new PackageJsonEditor(path.join(projectName, 'package.json'));
+  const newJsonContents = editor.moveDependencies('dep', 'dev', [
+    '@testing-library/jest-dom',
+    '@testing-library/react',
+    '@testing-library/user-event',
+    '@types/jest',
+    '@types/node',
+    '@types/react',
+    '@types/react-dom',
+    'react-scripts',
+    'typescript',
+  ]);
+  writePackageJson(projectName, sortJSON(JSON.parse(newJsonContents)));
 }

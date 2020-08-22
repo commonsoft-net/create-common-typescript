@@ -53,6 +53,7 @@ async function runReactApp(projectName: string) {
   );
   copyFiles(projectName, projectType);
   packageJson.addLintScript(projectName);
+  packageJson.moveDependencies(projectName);
   await new Storybook(projectName).install(projectType);
 }
 
