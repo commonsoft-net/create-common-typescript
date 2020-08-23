@@ -46,6 +46,7 @@ async function runReactApp(projectName: string) {
       '@typescript-eslint/parser',
       'eslint-config-prettier',
       'eslint-config-react',
+      'eslint-plugin-jest',
       'eslint-plugin-prettier',
       'prettier',
     ],
