@@ -26,9 +26,18 @@
   "rules": {
     "semi": "error",
     "no-multi-spaces": "error",
-    "no-multiple-empty-lines": ["error",{"max": 1}],
-    "indent": ["error", 2],
-    "prettier/prettier": ["error", { "singleQuote": true }],
+    "no-multiple-empty-lines": [
+      "error",
+      {
+        "max": 1
+      }
+    ],
+    "prettier/prettier": [
+      "error",
+      {
+        "singleQuote": true
+      }
+    ],
     "@typescript-eslint/explicit-module-boundary-types": 0
   }
 }
