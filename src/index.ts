@@ -88,5 +88,5 @@ export async function run(
     }
   }
   // Adds prebublish after all the yarn installs
-  packageJson.addPrepublishScript(projectName);
+  // packageJson.addPrepublishScript(projectName);
 }
